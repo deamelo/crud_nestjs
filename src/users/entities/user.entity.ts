@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Pet } from 'src/pets/entities/pet.entity';
+import { PetEntity } from 'src/pets/entities/pet.entity';
 
-@Entity()
-export class User {
+@Entity({name: 'users'})
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,8 +12,8 @@ export class User {
   @Column({ nullable: false })
   sexo: string;
 
-  @Column({ nullable: true })
-  data_de_nascimento: Date;
+  @Column({ nullable: true, type: 'date' })
+  data_de_nascimento: string;
 
   @Column({ nullable: false, unique: true, length: 14 })
   cpf: string;
@@ -21,6 +21,6 @@ export class User {
   @Column({ nullable: false })
   endereco: string;
 
-  @OneToMany(() => Pet, (pet) => pet.user, { eager: true })
-  pets: Pet[];
+  @OneToMany(() => PetEntity, (pet) => pet.user, { eager: true })
+  pets: PetEntity[];
 }

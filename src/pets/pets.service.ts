@@ -3,27 +3,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
-import { Pet } from './entities/pet.entity';
-import { User } from 'src/users/entities/user.entity';
+import { PetEntity } from './entities/pet.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { AppError } from 'src/errors/appError';
 
 @Injectable()
 export class PetsService {
   constructor(
-    @InjectRepository(Pet)
-    private readonly petsRepository: Repository<Pet>,
+    @InjectRepository(PetEntity)
+    private readonly petsRepository: Repository<PetEntity>,
     private usersService: UsersService,
   ) {}
 
-  async save(createPetDto: CreatePetDto, user: User): Promise<Pet> {
+  async save(createPetDto: CreatePetDto, user: UserEntity): Promise<PetEntity> {
     if (
       !createPetDto.nome ||
+      !createPetDto.especie ||
       !createPetDto.raca ||
       !createPetDto.sexo ||
       !createPetDto.user
     ) {
-      throw new AppError(400, 'Necessário informar nome, raça, sexo e user');
+      throw new AppError(400, 'Necessário informar nome, espécie, raça, sexo e user');
     }
 
     const userId = await this.usersService.findOneOrFail(user.id);
@@ -38,11 +39,11 @@ export class PetsService {
     }
   }
 
-  async findAll(): Promise<Pet[]> {
+  async findAll(): Promise<PetEntity[]> {
     return await this.petsRepository.find();
   }
 
-  async findOneOrFail(id: number): Promise<Pet> {
+  async findOneOrFail(id: number): Promise<PetEntity> {
     try {
       return await this.petsRepository.findOneByOrFail({ id });
     } catch {
@@ -50,7 +51,7 @@ export class PetsService {
     }
   }
 
-  async findByUser(userId: number): Promise<Pet[]> {
+  async findByUser(userId: number): Promise<PetEntity[]> {
     const user = await this.usersService.findOneOrFail(userId);
     if (user.pets.length === 0) {
       return [];
@@ -59,7 +60,7 @@ export class PetsService {
     }
   }
 
-  async update(id: number, updatePetDto: UpdatePetDto): Promise<Pet> {
+  async update(id: number, updatePetDto: UpdatePetDto): Promise<PetEntity> {
     const pet = await this.findOneOrFail(id);
     this.petsRepository.merge(pet, updatePetDto);
     return await this.petsRepository.save(pet);
