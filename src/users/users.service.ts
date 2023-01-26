@@ -2,18 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { AppError } from 'src/errors/appError';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
   ) {}
 
-  async save(createUserDto: CreateUserDto): Promise<User> {
+  async save(createUserDto: CreateUserDto): Promise<UserEntity> {
     if (
       !createUserDto.nome ||
       !createUserDto.sexo ||
@@ -32,11 +32,11 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     return await this.usersRepository.find();
   }
 
-  async findOneOrFail(id: number): Promise<User> {
+  async findOneOrFail(id: number): Promise<UserEntity> {
     try {
       return await this.usersRepository.findOneByOrFail({ id });
     } catch (error) {

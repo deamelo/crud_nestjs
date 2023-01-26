@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 
-@Entity()
-export class Pet {
+@Entity({name: 'pets'})
+export class PetEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,11 +10,14 @@ export class Pet {
   nome: string;
 
   @Column({ nullable: false })
+  especie: string;
+
+  @Column({ nullable: false })
   raca: string;
 
   @Column({ nullable: false })
   sexo: string;
 
-  @ManyToOne(() => User, (user) => user.pets, { onDelete: 'CASCADE' })
-  user: User;
+  @ManyToOne(() => UserEntity, (user) => user.pets, { onDelete: 'CASCADE' })
+  user: UserEntity;
 }

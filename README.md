@@ -19,7 +19,7 @@ Copie as informações que constam no arquivo `.env.example` e informe suas cred
 
     ```bash
     # development
-    $ yarn run start
+    $ yarn run start:dev
     ```
 
 ## Teste

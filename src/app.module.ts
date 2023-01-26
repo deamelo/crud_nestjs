@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { ConfigModule } from '@nestjs/config';
-import { Pet } from './pets/entities/pet.entity';
+import { PetEntity } from './pets/entities/pet.entity';
 import { PetsModule } from './pets/pets.module';
-import { User } from './users/entities/user.entity';
+import { UserEntity } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+require("dotenv").config()
 
 @Module({
   imports: [
-    // ConfigModule.forRootasync(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'dea',
-      password: '1234',
-      database: 'pets',
-      entities: [User, Pet],
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [UserEntity, PetEntity],
       synchronize: true,
     }),
     UsersModule,
