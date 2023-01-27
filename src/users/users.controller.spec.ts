@@ -1,5 +1,5 @@
 // import { Test, TestingModule } from '@nestjs/testing';
-import { PetEntity } from 'src/pets/entities/pet.entity';
+import { PetEntity } from '../pets/entities/pet.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { UsersController } from './users.controller';

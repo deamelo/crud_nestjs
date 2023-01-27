@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { AppError } from 'src/errors/appError';
+import { AppError } from '../errors/appError';
 
 @Injectable()
 export class UsersService {
@@ -14,15 +14,6 @@ export class UsersService {
   ) {}
 
   async save(createUserDto: CreateUserDto): Promise<UserEntity> {
-    if (
-      !createUserDto.nome ||
-      !createUserDto.sexo ||
-      !createUserDto.cpf ||
-      !createUserDto.endereco
-    ) {
-      throw new AppError(400, 'Necessário informar nome, sexo, cpf e endereco');
-    }
-
     try {
       return await this.usersRepository.save(
         this.usersRepository.create(createUserDto),

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PetEntity } from 'src/pets/entities/pet.entity';
+import { PetEntity } from '../../pets/entities/pet.entity';
 
 @Entity({name: 'users'})
 export class UserEntity {
@@ -15,7 +15,7 @@ export class UserEntity {
   @Column({ nullable: true, type: 'date' })
   data_de_nascimento: string;
 
-  @Column({ nullable: false, unique: true, length: 14 })
+  @Column({ nullable: false, unique: true, length:11 })
   cpf: string;
 
   @Column({ nullable: false })

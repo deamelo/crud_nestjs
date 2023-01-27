@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { PetEntity } from './entities/pet.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
-import { AppError } from 'src/errors/appError';
+import { UserEntity } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { AppError } from '../errors/appError';
 
 @Injectable()
 export class PetsService {
@@ -17,16 +17,6 @@ export class PetsService {
   ) {}
 
   async save(createPetDto: CreatePetDto, user: UserEntity): Promise<PetEntity> {
-    if (
-      !createPetDto.nome ||
-      !createPetDto.especie ||
-      !createPetDto.raca ||
-      !createPetDto.sexo ||
-      !createPetDto.user
-    ) {
-      throw new AppError(400, 'Necessário informar nome, espécie, raça, sexo e user');
-    }
-
     const userId = await this.usersService.findOneOrFail(user.id);
 
     if (!userId) {
@@ -45,7 +35,7 @@ export class PetsService {
 
   async findOneOrFail(id: number): Promise<PetEntity> {
     try {
-      return await this.petsRepository.findOneByOrFail({ id });
+      return await this.petsRepository.findOneByOrFail({id});
     } catch {
       throw new AppError(404, `ID ${id} não encontrado`);
     }
