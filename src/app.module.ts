@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PetEntity } from './pets/entities/pet.entity';
 import { PetsModule } from './pets/pets.module';
-import { UserEntity } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 require("dotenv").config()
 
@@ -10,12 +8,12 @@ require("dotenv").config()
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT || 5432),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, PetEntity],
+      entities: [__dirname + '/**/*.entity{.js,.ts}'],
       synchronize: true,
     }),
     UsersModule,

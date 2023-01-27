@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { create } from 'domain';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { UserFactory } from './users.factory';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -36,14 +33,16 @@ describe('UsersService', () => {
 
   describe('save', () => {
     it('salvar novo user', async () => {
-      const data: CreateUserDto = new UserFactory
-      // {
-      //   nome: "teste",
-      //   sexo: "F",
-      //   data_de_nascimento: "2000-05-05",
-      //   cpf: "111.222.333-44",
-      //   endereco: "aqui",
-      // }
+      const data =  
+      {
+        id: 1,
+        nome: "teste",
+        sexo: "F",
+        data_de_nascimento: "2000-05-05",
+        cpf: "111.222.333-44",
+        endereco: "aqui",
+        pets: []
+      }
 
       jest.spyOn(userRepository, 'create').mockReturnValueOnce(data)
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce(data)
