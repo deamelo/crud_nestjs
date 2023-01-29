@@ -20,4 +20,14 @@ export class PetEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.pets, { onDelete: 'CASCADE' })
   user: UserEntity;
+
+  constructor(pet?: Partial<PetEntity>) {
+    this.id = pet?.id
+    this.nome = pet?.nome
+    this.especie = pet?.especie            
+    this.raca  = pet?.raca 
+    this.sexo = pet?.sexo
+    this.user = pet?.user
+  }
+
 }

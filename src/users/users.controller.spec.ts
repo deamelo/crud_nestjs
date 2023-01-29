@@ -1,51 +1,76 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-import { PetEntity } from '../pets/entities/pet.entity';
-import { Repository } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
 import { UserEntity } from './entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
-// describe('UsersController', () => {
-//   let controller: UsersController;
+const newUserEntity: UserEntity = {id: 1, nome: "Teste", sexo: "F", data_de_nascimento: "2000-10-10", cpf: "00000000001", endereco: "Rua 10", pets: []}
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       controllers: [UsersController],
-//       providers: [UsersService],
-//     }).compile();
-
-//     controller = module.get<UsersController>(UsersController);
-//   });
-
-//   it('should be defined', () => {
-//     expect(controller).toBeDefined();
-//   });
-// });
-
+const userEntityList: UserEntity[] = [
+  newUserEntity
+]
 
 describe('UsersController', () => {
-  let usersController: UsersController;
-  let usersService: UsersService;
-  let user = {
-    nome: "Teste",
-    sexo: "M",
-    data_de_nascimento: "2000-10-10",
-    cpf: "000.000.000-00",
-    endereco: "rua 10",
-    pets: PetEntity
-  }
+  let userController: UsersController;
+  let usersService: UsersService
 
-  beforeEach(() => {
-    // usersService = new UsersService();
-    usersController = new UsersController(usersService);
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        {
+          provide: UsersService,
+          useValue: {
+            save: jest.fn().mockResolvedValue(newUserEntity),
+            findAll: jest.fn().mockResolvedValue(userEntityList),
+            findOneOrFail: jest.fn().mockResolvedValue(newUserEntity),
+            update: jest.fn().mockResolvedValue(newUserEntity),
+            remove: jest.fn().mockResolvedValue(undefined),
+          }
+      }],
+    }).compile();
+
+    userController = module.get<UsersController>(UsersController);
+    usersService = module.get<UsersService>(UsersService);
   });
 
+  it('should be defined', () => {
+    expect(userController).toBeDefined();
+    expect(usersService).toBeDefined();
+  });
+  
+  describe('save', () => {
+    it('should be save', async () => {
+      const result = await userController.save(newUserEntity)
+      expect(result).toEqual(newUserEntity)
+    })
+  });
+  
   describe('findAll', () => {
-    it('should return an array of users', async () => {
-      const result = ['test'];
-      // jest.spyOn(usersService, 'findAll').mockImplementation(() => result);
-
-      expect(await usersController.findAll()).toBe(result);
-    });
+    it('should be findAll', async () => {
+      const result = await userController.findAll()
+      expect(result).toEqual(userEntityList)
+    })
   });
-});
+
+  describe('findOne', () => {
+    it('should be findOne', async () => {
+      const result = await userController.findOne(1)
+      expect(result.id).toEqual(newUserEntity.id)
+    })
+  });
+
+  describe('update', () => {
+    it('should be update', async () => {
+      let userUpdate = {nome: "Trocou nome"}
+      const result = await userController.update(1, userUpdate)
+      expect(result.id).toEqual(newUserEntity.id)
+    })
+  });
+
+  describe('remove', () => {
+    it('should be remove', async () => {
+      const result = await userController.remove(1)
+      expect(result).toBeUndefined()
+    })
+  });
+})

@@ -1,11 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { UsersModule } from '../src/users/users.module';
 import { UsersService } from '../src/users/users.service';
+import { UserEntity } from 'users/entities/user.entity';
 
-describe('UserController (e2e)', () => {
+const newUserEntity: UserEntity = {id: 1, nome: "Teste", sexo: "F", data_de_nascimento: "2000-10-10", cpf: "00000000001", endereco: "Rua 10", pets: []}
+
+const userEntityList: UserEntity[] = [
+  newUserEntity
+]
+
+describe('User', () => {
   let app: INestApplication;
   let usersService = { findAll: () => ['test'] };
 
