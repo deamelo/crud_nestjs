@@ -23,4 +23,14 @@ export class UserEntity {
 
   @OneToMany(() => PetEntity, (pet) => pet.user, { eager: true })
   pets: PetEntity[];
+
+  constructor(user?: Partial<UserEntity>){
+    this.id = user?.id
+    this.nome = user?.nome
+    this.sexo = user?.sexo
+    this.data_de_nascimento = user?.data_de_nascimento
+    this.cpf = user?.cpf
+    this.endereco = user?.endereco
+    this.pets = user?.pets
+  }
 }

@@ -1,14 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-// import { UserEntity } from 'users/entities/user.entity';
+import { UserEntity } from 'users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { PetEntity } from './entities/pet.entity';
 import { PetsService } from './pets.service';
 
+const newUser: UserEntity = {id: 1, nome: "Teste", sexo: "F", data_de_nascimento: "2000-10-10", cpf: "00000000001", endereco: "Rua 10", pets: []}
+
+const newPetEntity: PetEntity = {id: 1, nome: "Teste", especie: "Felina", raca: "SRD", sexo: "F", user: newUser}
+
 describe('PetsService', () => {
   let petservice: PetsService;
   let petRepository: Repository<PetEntity>
+  // let userService: UsersService;
+  // let userRepository: Repository<UserEntity>
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,8 +24,8 @@ describe('PetsService', () => {
         {
           provide: getRepositoryToken(PetEntity), 
           useValue: {
-            save: jest.fn(),
-            create: jest.fn()
+            save: jest.fn().mockReturnValueOnce(newPetEntity),
+            create: jest.fn().mockResolvedValueOnce(newPetEntity),
           }
         }
       ],
@@ -34,31 +40,12 @@ describe('PetsService', () => {
     expect(petRepository).toBeDefined();
   });
 
-  describe('save', () => {
-    it('salvar novo pet', async () => {
-      const userData =  
-      {
-        id: 1,
-        nome: "teste",
-        sexo: "F",
-        data_de_nascimento: "2000-05-05",
-        cpf: "111.222.333-44",
-        endereco: "aqui",
-        pets: []
-      }
-      const petData = {  
-        id: 1,
-        nome: "teste",
-        especie: "Canina",
-        raca: "SRD",
-        sexo: "F",
-        user: userData
-      }
+  describe('save e create', () => {
+    it('save e create', async () => {
+      jest.spyOn(petRepository, 'create')
+      jest.spyOn(petRepository, 'save')
 
-      jest.spyOn(petRepository, 'create').mockReturnValueOnce(petData)
-      jest.spyOn(petRepository, 'save').mockResolvedValueOnce(petData)
-
-      const result = await petservice.save(petData, userData);
+      const result = await petservice.save(newPetEntity, newUser);
       expect(result).toBeDefined()
     })   
   })
